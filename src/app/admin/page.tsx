@@ -132,6 +132,17 @@ export default function AdminPage() {
     });
   };
 
+  const formatPhone = (val: string) => {
+    const nums = val.replace(/\D/g, '').substring(0, 11);
+    if (!nums) return '';
+    if (nums.length <= 1) return '+7 (';
+    let res = '+7 (' + nums.substring(1, 4);
+    if (nums.length >= 5) res += ') ' + nums.substring(4, 7);
+    if (nums.length >= 8) res += '-' + nums.substring(7, 9);
+    if (nums.length >= 10) res += '-' + nums.substring(9, 11);
+    return res;
+  };
+
   // --- Services Handlers ---
   const startEditService = (service: Service) => {
     setEditingService(service.id);
@@ -223,6 +234,7 @@ export default function AdminPage() {
                 <option value="all">Все статусы</option>
                 <option value="pending">Ожидает</option>
                 <option value="confirmed">Подтверждена</option>
+                <option value="completed">Завершен</option>
                 <option value="cancelled">Отменена</option>
               </select>
               <input
@@ -251,7 +263,7 @@ export default function AdminPage() {
                   <tbody>
                     {filteredAppointments.map(a => (
                       <tr key={a.id} style={{ borderBottom: '1px solid #e5e7eb' }}>
-                        <td style={{ padding: '16px', borderRight: '1px solid #e5e7eb' }}>
+                        <td style={{ padding: '16px', borderRight: '1px solid #e5e7eb', whiteSpace: 'nowrap' }}>
                           <div style={{ fontWeight: 500 }}>{formatDate(a.date)}</div>
                           <div style={{ color: '#6b7280', fontSize: '13px', marginTop: '4px' }}>{a.time}</div>
                         </td>
@@ -288,6 +300,7 @@ export default function AdminPage() {
                           >
                             <option value="pending">Ожидает</option>
                             <option value="confirmed">Подтверждена</option>
+                            <option value="completed">Завершен</option>
                             <option value="cancelled">Отменена</option>
                           </select>
                         </td>
@@ -414,7 +427,7 @@ export default function AdminPage() {
             <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '20px', color: '#111827' }}>Редактирование записи</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
               <input type="text" placeholder="Имя" value={appointmentEditForm.name} onChange={e => setAppointmentEditForm({...appointmentEditForm, name: e.target.value})} style={{ padding: '10px 14px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', background: '#fff', color: '#111827', outline: 'none' }} />
-              <input type="text" placeholder="Телефон" value={appointmentEditForm.phone} onChange={e => setAppointmentEditForm({...appointmentEditForm, phone: e.target.value})} style={{ padding: '10px 14px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', background: '#fff', color: '#111827', outline: 'none' }} />
+              <input type="text" placeholder="Телефон" value={appointmentEditForm.phone} onChange={e => setAppointmentEditForm({...appointmentEditForm, phone: formatPhone(e.target.value)})} style={{ padding: '10px 14px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', background: '#fff', color: '#111827', outline: 'none' }} />
               <div style={{ display: 'flex', gap: '10px' }}>
                 <input type="date" value={appointmentEditForm.date} onChange={e => setAppointmentEditForm({...appointmentEditForm, date: e.target.value})} style={{ flex: 1, padding: '10px 14px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', background: '#fff', color: '#111827', outline: 'none' }} />
                 <input type="time" value={appointmentEditForm.time} onChange={e => setAppointmentEditForm({...appointmentEditForm, time: e.target.value})} style={{ flex: 1, padding: '10px 14px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', background: '#fff', color: '#111827', outline: 'none' }} />
