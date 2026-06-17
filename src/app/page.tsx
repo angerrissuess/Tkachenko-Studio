@@ -513,6 +513,11 @@ function BookingModal({ services, isOpen, onClose }: { services: Service[], isOp
               <label className="booking__label">Комментарий</label>
               <textarea className="booking__textarea" name="comment" placeholder="Дополнительные пожелания..." value={formData.comment} onChange={handleChange}></textarea>
             </div>
+            {formData.serviceIds.length > 0 && (
+              <div style={{ marginTop: '10px', fontSize: '18px', fontWeight: 600, color: '#111827', textAlign: 'center' }}>
+                Итого: {formData.serviceIds.reduce((sum, id) => sum + (services.find(s => s.id === id)?.price || 0), 0).toLocaleString('ru-RU')} ₽
+              </div>
+            )}
             <div className="booking__submit">
               <button className="btn btn--primary" type="submit" disabled={loading}>
                 {loading ? 'Отправка...' : 'Записаться'}
