@@ -350,8 +350,8 @@ function MapSection() {
               <a href="https://t.me/tkachenko_studio" target="_blank" rel="noopener noreferrer" className="map__social-link" title="Telegram">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
               </a>
-              <a href="https://vk.com/tkachenko.yulia_colorist" target="_blank" rel="noopener noreferrer" className="map__social-link" title="VKontakte">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2z"></path><path d="M8.5 10c0 3.5 2.5 5.5 5.5 5.5h.5v-2h-.5c-1.5 0-2-1-2-1.5s.5-1.5 2-1.5h1l1-3h-1.5L13 9.5 12.5 8H11v3.5l-1.5-3.5H8v1.5l1.5 3L8.5 10z"></path></svg>
+              <a href="https://vk.com/tkachenko.yulia_colorist" target="_blank" rel="noopener noreferrer" className="map__social-link" title="VKontakte" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '14px' }}>
+                VK
               </a>
             </div>
 
@@ -547,8 +547,12 @@ function Footer() {
         <div className="footer__bottom">
           <p className="footer__copyright" suppressHydrationWarning>© {new Date().getFullYear()} Tkachenko Studio. Все права защищены.</p>
           <div className="footer__social">
-            <a href="https://wa.me/79673138893" target="_blank" rel="noopener noreferrer" className="footer__social-icon" title="WhatsApp">WA</a>
-            <a href="https://t.me/tkachenko_studio" target="_blank" rel="noopener noreferrer" className="footer__social-icon" title="Telegram">TG</a>
+            <a href="https://wa.me/79673138893" target="_blank" rel="noopener noreferrer" className="footer__social-icon" title="WhatsApp" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+            </a>
+            <a href="https://t.me/tkachenko_studio" target="_blank" rel="noopener noreferrer" className="footer__social-icon" title="Telegram" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </a>
             <a href="https://vk.com/tkachenko.yulia_colorist" target="_blank" rel="noopener noreferrer" className="footer__social-icon" title="VK">VK</a>
           </div>
         </div>
