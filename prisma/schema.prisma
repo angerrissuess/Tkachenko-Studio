@@ -39,8 +39,7 @@ model Appointment {
   name      String
   phone     String
   email     String?
-  serviceId Int?
-  service   Service? @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  services  Service[]
   date      DateTime
   time      String
   comment   String?

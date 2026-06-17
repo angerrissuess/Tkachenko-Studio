@@ -383,8 +383,17 @@ function MapSection() {
    ═══════════════════════════════════════════ */
 function BookingModal({ services, isOpen, onClose }: { services: Service[], isOpen: boolean, onClose: () => void }) {
   const [formData, setFormData] = useState({
-    name: '', phone: '', email: '', serviceId: '', date: '', time: '', comment: '',
+    name: '', phone: '', email: '', serviceIds: [] as number[], date: '', time: '', comment: '',
   });
+
+  const handleServiceChange = (id: number) => {
+    setFormData(prev => ({
+      ...prev,
+      serviceIds: prev.serviceIds.includes(id) 
+        ? prev.serviceIds.filter(sId => sId !== id) 
+        : [...prev.serviceIds, id]
+    }));
+  };
   const [toast, setToast] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -431,7 +440,7 @@ function BookingModal({ services, isOpen, onClose }: { services: Service[], isOp
 
       if (res.ok) {
         setToast('✓ Вы успешно записаны!');
-        setFormData({ name: '', phone: '', email: '', serviceId: '', date: '', time: '', comment: '' });
+        setFormData({ name: '', phone: '', email: '', serviceIds: [], date: '', time: '', comment: '' });
         setTimeout(() => onClose(), 2000);
       } else {
         const data = await res.json();
@@ -473,14 +482,24 @@ function BookingModal({ services, isOpen, onClose }: { services: Service[], isOp
               <label className="booking__label">Email</label>
               <input className="booking__input" type="email" name="email" placeholder="Ваш email (необязательно)" value={formData.email} onChange={handleChange} />
             </div>
-            <div className="booking__field">
-              <label className="booking__label">Услуга</label>
-              <select className="booking__select" name="serviceId" value={formData.serviceId} onChange={handleChange}>
-                <option value="">Выберите услугу</option>
+            <div className="booking__field full-width">
+              <label className="booking__label">Выберите услуги</label>
+              <div style={{ maxHeight: '180px', overflowY: 'auto', border: '1px solid #e2e8f0', padding: '12px', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 {services.map(s => (
-                  <option key={s.id} value={s.id}>{s.name} — {s.price.toLocaleString('ru-RU')} ₽</option>
+                  <label key={s.id} style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', cursor: 'pointer' }}>
+                    <input 
+                      type="checkbox" 
+                      style={{ marginTop: '2px', width: '18px', height: '18px', accentColor: '#000', cursor: 'pointer' }}
+                      checked={formData.serviceIds.includes(s.id)}
+                      onChange={() => handleServiceChange(s.id)}
+                    />
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <span style={{ fontWeight: 500, color: '#1e293b', fontSize: '15px' }}>{s.name}</span>
+                      <span style={{ fontSize: '13px', color: '#64748b' }}>{s.price.toLocaleString('ru-RU')} ₽</span>
+                    </div>
+                  </label>
                 ))}
-              </select>
+              </div>
             </div>
             <div className="booking__field">
               <label className="booking__label">Дата *</label>

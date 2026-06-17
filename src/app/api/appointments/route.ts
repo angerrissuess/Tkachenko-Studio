@@ -4,7 +4,7 @@ import prisma from '@/lib/prisma';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, phone, email, serviceId, date, time, comment } = body;
+    const { name, phone, email, serviceIds, date, time, comment } = body;
 
     // Validation
     if (!name || !phone || !date || !time) {
@@ -29,14 +29,16 @@ export async function POST(request: NextRequest) {
         name: sanitize(name) as string,
         phone,
         email: sanitize(email),
-        serviceId: serviceId ? parseInt(serviceId) : null,
+        services: serviceIds && Array.isArray(serviceIds) && serviceIds.length > 0 
+          ? { connect: serviceIds.map((id: any) => ({ id: Number(id) })) } 
+          : undefined,
         date: new Date(date),
         time,
         comment: sanitize(comment),
         status: 'pending',
       },
       include: {
-        service: true,
+        services: true,
       },
     });
 
@@ -55,7 +57,7 @@ export async function GET() {
     const appointments = await prisma.appointment.findMany({
       orderBy: { createdAt: 'desc' },
       include: {
-        service: {
+        services: {
           include: {
             category: true,
           },

@@ -13,11 +13,12 @@ interface Appointment {
   comment: string | null;
   status: string;
   createdAt: string;
-  service: {
+  services: {
+    id: number;
     name: string;
     price: number;
     category: { name: string };
-  } | null;
+  }[];
 }
 
 interface Service {
@@ -96,7 +97,7 @@ export default function AdminPage() {
     const matchesSearch = search === '' ||
       a.name.toLowerCase().includes(search.toLowerCase()) ||
       a.phone.includes(search) ||
-      (a.service?.name.toLowerCase().includes(search.toLowerCase()));
+      (a.services?.some((s: any) => s.name.toLowerCase().includes(search.toLowerCase())));
     const matchesStatus = filterStatus === 'all' || a.status === filterStatus;
     return matchesSearch && matchesStatus;
   });
@@ -235,8 +236,18 @@ export default function AdminPage() {
                           <div style={{ marginTop: '4px' }}><a href={`tel:${a.phone}`} style={{ color: '#2563eb', fontSize: '13px', textDecoration: 'none' }}>{a.phone}</a></div>
                         </td>
                         <td style={{ padding: '16px' }}>
-                          <div style={{ fontWeight: 500 }}>{a.service?.name || '—'}</div>
-                          <div style={{ color: '#6b7280', fontSize: '12px', marginTop: '4px' }}>{a.service?.category.name}</div>
+                          {a.services && a.services.length > 0 ? (
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                              {a.services.map((s: any) => (
+                                <div key={s.id}>
+                                  <div style={{ fontWeight: 500 }}>{s.name}</div>
+                                  <div style={{ color: '#6b7280', fontSize: '12px', marginTop: '2px' }}>{s.category?.name}</div>
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            <div style={{ fontWeight: 500 }}>-</div>
+                          )}
                         </td>
                         <td style={{ padding: '16px' }}>
                           <select 
