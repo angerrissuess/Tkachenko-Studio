@@ -43,6 +43,8 @@ export default function AdminPage() {
   // Appointments State
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
+  const [editingAppointment, setEditingAppointment] = useState<Appointment | null>(null);
+  const [appointmentEditForm, setAppointmentEditForm] = useState({ name: '', phone: '', date: '', time: '', serviceIds: [] as number[] });
 
   // Services Edit State
   const [editingService, setEditingService] = useState<number | null>(null);
@@ -90,6 +92,28 @@ export default function AdminPage() {
   const deleteAppointment = async (id: number) => {
     if (!confirm('Удалить эту запись навсегда?')) return;
     await fetch(`/api/appointments/${id}`, { method: 'DELETE' });
+    fetchData();
+  };
+
+  const startEditAppointment = (app: Appointment) => {
+    setEditingAppointment(app);
+    setAppointmentEditForm({
+      name: app.name,
+      phone: app.phone,
+      date: app.date.split('T')[0],
+      time: app.time,
+      serviceIds: app.services ? app.services.map((s: any) => s.id) : []
+    });
+  };
+
+  const saveAppointment = async () => {
+    if (!editingAppointment) return;
+    await fetch(`/api/appointments/${editingAppointment.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(appointmentEditForm)
+    });
+    setEditingAppointment(null);
     fetchData();
   };
 
@@ -268,7 +292,10 @@ export default function AdminPage() {
                           </select>
                         </td>
                         <td style={{ padding: '16px' }}>
-                          <button onClick={() => deleteAppointment(a.id)} style={{ color: '#dc2626', background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 500 }}>Удалить</button>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            <button onClick={() => startEditAppointment(a)} style={{ color: '#2563eb', background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 500, textAlign: 'left', padding: 0 }}>Редактировать</button>
+                            <button onClick={() => deleteAppointment(a.id)} style={{ color: '#dc2626', background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '13px', fontWeight: 500, textAlign: 'left', padding: 0 }}>Удалить</button>
+                          </div>
                         </td>
                       </tr>
                     ))}
@@ -381,6 +408,41 @@ export default function AdminPage() {
           </div>
         )}
       </div>
+      {editingAppointment && (
+        <div className="admin-auth-modal" onClick={() => setEditingAppointment(null)}>
+          <div className="admin-auth-content" onClick={e => e.stopPropagation()} style={{ width: '400px' }}>
+            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '20px' }}>Редактирование записи</h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <input type="text" placeholder="Имя" value={appointmentEditForm.name} onChange={e => setAppointmentEditForm({...appointmentEditForm, name: e.target.value})} style={{ padding: '8px', border: '1px solid #d1d5db', borderRadius: '4px' }} />
+              <input type="text" placeholder="Телефон" value={appointmentEditForm.phone} onChange={e => setAppointmentEditForm({...appointmentEditForm, phone: e.target.value})} style={{ padding: '8px', border: '1px solid #d1d5db', borderRadius: '4px' }} />
+              <input type="date" value={appointmentEditForm.date} onChange={e => setAppointmentEditForm({...appointmentEditForm, date: e.target.value})} style={{ padding: '8px', border: '1px solid #d1d5db', borderRadius: '4px' }} />
+              <input type="time" value={appointmentEditForm.time} onChange={e => setAppointmentEditForm({...appointmentEditForm, time: e.target.value})} style={{ padding: '8px', border: '1px solid #d1d5db', borderRadius: '4px' }} />
+              
+              <div style={{ border: '1px solid #e5e7eb', borderRadius: '4px', padding: '10px', maxHeight: '150px', overflowY: 'auto' }}>
+                <div style={{ fontWeight: 600, marginBottom: '8px', fontSize: '14px' }}>Услуги:</div>
+                {categories.flatMap(c => c.services).map(s => (
+                  <label key={s.id} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px', cursor: 'pointer', fontSize: '13px' }}>
+                    <input 
+                      type="checkbox" 
+                      checked={appointmentEditForm.serviceIds.includes(s.id)}
+                      onChange={() => {
+                        const ids = appointmentEditForm.serviceIds;
+                        setAppointmentEditForm({...appointmentEditForm, serviceIds: ids.includes(s.id) ? ids.filter(id => id !== s.id) : [...ids, s.id]});
+                      }}
+                    />
+                    {s.name}
+                  </label>
+                ))}
+              </div>
+              
+              <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+                <button onClick={saveAppointment} style={{ flex: 1, background: '#111827', color: '#fff', padding: '10px', borderRadius: '4px', border: 'none', cursor: 'pointer', fontWeight: 600 }}>Сохранить</button>
+                <button onClick={() => setEditingAppointment(null)} style={{ flex: 1, background: '#f3f4f6', color: '#4b5563', padding: '10px', borderRadius: '4px', border: 'none', cursor: 'pointer', fontWeight: 600 }}>Отмена</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
