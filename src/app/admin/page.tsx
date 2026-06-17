@@ -410,34 +410,40 @@ export default function AdminPage() {
       </div>
       {editingAppointment && (
         <div className="admin-auth-modal" onClick={() => setEditingAppointment(null)}>
-          <div className="admin-auth-content" onClick={e => e.stopPropagation()} style={{ width: '400px' }}>
-            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '20px' }}>Редактирование записи</h2>
+          <div className="admin-auth-content" onClick={e => e.stopPropagation()} style={{ width: '420px', background: '#ffffff', color: '#111827', padding: '24px', borderRadius: '12px', boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)' }}>
+            <h2 style={{ fontSize: '20px', fontWeight: 600, marginBottom: '20px', color: '#111827' }}>Редактирование записи</h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-              <input type="text" placeholder="Имя" value={appointmentEditForm.name} onChange={e => setAppointmentEditForm({...appointmentEditForm, name: e.target.value})} style={{ padding: '8px', border: '1px solid #d1d5db', borderRadius: '4px' }} />
-              <input type="text" placeholder="Телефон" value={appointmentEditForm.phone} onChange={e => setAppointmentEditForm({...appointmentEditForm, phone: e.target.value})} style={{ padding: '8px', border: '1px solid #d1d5db', borderRadius: '4px' }} />
-              <input type="date" value={appointmentEditForm.date} onChange={e => setAppointmentEditForm({...appointmentEditForm, date: e.target.value})} style={{ padding: '8px', border: '1px solid #d1d5db', borderRadius: '4px' }} />
-              <input type="time" value={appointmentEditForm.time} onChange={e => setAppointmentEditForm({...appointmentEditForm, time: e.target.value})} style={{ padding: '8px', border: '1px solid #d1d5db', borderRadius: '4px' }} />
+              <input type="text" placeholder="Имя" value={appointmentEditForm.name} onChange={e => setAppointmentEditForm({...appointmentEditForm, name: e.target.value})} style={{ padding: '10px 14px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', background: '#fff', color: '#111827', outline: 'none' }} />
+              <input type="text" placeholder="Телефон" value={appointmentEditForm.phone} onChange={e => setAppointmentEditForm({...appointmentEditForm, phone: e.target.value})} style={{ padding: '10px 14px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', background: '#fff', color: '#111827', outline: 'none' }} />
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <input type="date" value={appointmentEditForm.date} onChange={e => setAppointmentEditForm({...appointmentEditForm, date: e.target.value})} style={{ flex: 1, padding: '10px 14px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', background: '#fff', color: '#111827', outline: 'none' }} />
+                <input type="time" value={appointmentEditForm.time} onChange={e => setAppointmentEditForm({...appointmentEditForm, time: e.target.value})} style={{ flex: 1, padding: '10px 14px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px', background: '#fff', color: '#111827', outline: 'none' }} />
+              </div>
               
-              <div style={{ border: '1px solid #e5e7eb', borderRadius: '4px', padding: '10px', maxHeight: '150px', overflowY: 'auto' }}>
-                <div style={{ fontWeight: 600, marginBottom: '8px', fontSize: '14px' }}>Услуги:</div>
+              <div style={{ border: '1px solid #e5e7eb', borderRadius: '6px', padding: '12px', maxHeight: '180px', overflowY: 'auto', background: '#f9fafb' }}>
+                <div style={{ fontWeight: 600, marginBottom: '10px', fontSize: '14px', color: '#374151' }}>Услуги:</div>
                 {categories.flatMap(c => c.services).map(s => (
-                  <label key={s.id} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px', cursor: 'pointer', fontSize: '13px' }}>
+                  <label key={s.id} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', marginBottom: '8px', cursor: 'pointer', fontSize: '14px', color: '#111827', lineHeight: '1.4' }}>
                     <input 
                       type="checkbox" 
+                      style={{ width: '16px', height: '16px', accentColor: '#000', cursor: 'pointer', marginTop: '2px' }}
                       checked={appointmentEditForm.serviceIds.includes(s.id)}
                       onChange={() => {
                         const ids = appointmentEditForm.serviceIds;
                         setAppointmentEditForm({...appointmentEditForm, serviceIds: ids.includes(s.id) ? ids.filter(id => id !== s.id) : [...ids, s.id]});
                       }}
                     />
-                    {s.name}
+                    <div>
+                      <div>{s.name}</div>
+                      <div style={{ color: '#059669', fontSize: '13px', fontWeight: 500 }}>{s.price.toLocaleString('ru-RU')} ₽</div>
+                    </div>
                   </label>
                 ))}
               </div>
               
-              <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
-                <button onClick={saveAppointment} style={{ flex: 1, background: '#111827', color: '#fff', padding: '10px', borderRadius: '4px', border: 'none', cursor: 'pointer', fontWeight: 600 }}>Сохранить</button>
-                <button onClick={() => setEditingAppointment(null)} style={{ flex: 1, background: '#f3f4f6', color: '#4b5563', padding: '10px', borderRadius: '4px', border: 'none', cursor: 'pointer', fontWeight: 600 }}>Отмена</button>
+              <div style={{ display: 'flex', gap: '10px', marginTop: '16px' }}>
+                <button onClick={saveAppointment} style={{ flex: 1, background: '#111827', color: '#fff', padding: '12px', borderRadius: '6px', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '14px', transition: 'background 0.2s' }}>Сохранить</button>
+                <button onClick={() => setEditingAppointment(null)} style={{ flex: 1, background: '#e5e7eb', color: '#374151', padding: '12px', borderRadius: '6px', border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: '14px', transition: 'background 0.2s' }}>Отмена</button>
               </div>
             </div>
           </div>
