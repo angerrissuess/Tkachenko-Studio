@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Category {
+  id          Int       @id @default(autoincrement())
+  name        String
+  slug        String    @unique
+  description String?
+  order       Int       @default(0)
+  services    Service[]
+
+  @@map("categories")
+}
+
+model Service {
+  id           Int           @id @default(autoincrement())
+  name         String
+  description  String?
+  price        Int
+  unit         String?
+  categoryId   Int
+  category     Category      @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  image        String?
+  order        Int           @default(0)
+  appointments Appointment[]
+
+  @@map("services")
+}
+
+model Appointment {
+  id        Int      @id @default(autoincrement())
+  name      String
+  phone     String
+  email     String?
+  serviceId Int?
+  service   Service? @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  date      DateTime
+  time      String
+  comment   String?
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+
+  @@map("appointments")
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  author    String
+  rating    Int
+  text      String
+  date      DateTime
+  source    String   @default("yandex")
+  createdAt DateTime @default(now())
+
+  @@map("reviews")
+}
+
+model PortfolioItem {
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String?
+  category    String
+  image       String
+  order       Int     @default(0)
+
+  @@map("portfolio_items")
+}
