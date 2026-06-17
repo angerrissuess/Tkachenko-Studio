@@ -217,39 +217,46 @@ export default function AdminPage() {
                 <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
                   <thead style={{ background: '#f3f4f6', borderBottom: '1px solid #e5e7eb' }}>
                     <tr>
-                      <th style={{ padding: '16px', fontWeight: 600, fontSize: '14px', color: '#374151' }}>Дата и Время</th>
-                      <th style={{ padding: '16px', fontWeight: 600, fontSize: '14px', color: '#374151' }}>Клиент</th>
-                      <th style={{ padding: '16px', fontWeight: 600, fontSize: '14px', color: '#374151' }}>Услуга</th>
-                      <th style={{ padding: '16px', fontWeight: 600, fontSize: '14px', color: '#374151' }}>Статус</th>
+                      <th style={{ padding: '16px', fontWeight: 600, fontSize: '14px', color: '#374151', borderRight: '1px solid #e5e7eb' }}>Дата и Время</th>
+                      <th style={{ padding: '16px', fontWeight: 600, fontSize: '14px', color: '#374151', borderRight: '1px solid #e5e7eb' }}>Клиент</th>
+                      <th style={{ padding: '16px', fontWeight: 600, fontSize: '14px', color: '#374151', borderRight: '1px solid #e5e7eb' }}>Услуга</th>
+                      <th style={{ padding: '16px', fontWeight: 600, fontSize: '14px', color: '#374151', borderRight: '1px solid #e5e7eb' }}>Статус</th>
                       <th style={{ padding: '16px', fontWeight: 600, fontSize: '14px', color: '#374151' }}>Действия</th>
                     </tr>
                   </thead>
                   <tbody>
                     {filteredAppointments.map(a => (
                       <tr key={a.id} style={{ borderBottom: '1px solid #e5e7eb' }}>
-                        <td style={{ padding: '16px' }}>
+                        <td style={{ padding: '16px', borderRight: '1px solid #e5e7eb' }}>
                           <div style={{ fontWeight: 500 }}>{formatDate(a.date)}</div>
                           <div style={{ color: '#6b7280', fontSize: '13px', marginTop: '4px' }}>{a.time}</div>
                         </td>
-                        <td style={{ padding: '16px' }}>
+                        <td style={{ padding: '16px', borderRight: '1px solid #e5e7eb' }}>
                           <div style={{ fontWeight: 500 }}>{a.name}</div>
                           <div style={{ marginTop: '4px' }}><a href={`tel:${a.phone}`} style={{ color: '#2563eb', fontSize: '13px', textDecoration: 'none' }}>{a.phone}</a></div>
                         </td>
-                        <td style={{ padding: '16px' }}>
+                        <td style={{ padding: '16px', borderRight: '1px solid #e5e7eb' }}>
                           {a.services && a.services.length > 0 ? (
-                            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                               {a.services.map((s: any) => (
                                 <div key={s.id}>
-                                  <div style={{ fontWeight: 500 }}>{s.name}</div>
+                                  <div style={{ fontWeight: 500 }}>
+                                    {s.name} <span style={{ color: '#059669', fontSize: '13px', marginLeft: '4px' }}>({s.price ? s.price.toLocaleString('ru-RU') : 0} ₽)</span>
+                                  </div>
                                   <div style={{ color: '#6b7280', fontSize: '12px', marginTop: '2px' }}>{s.category?.name}</div>
                                 </div>
                               ))}
+                              {a.services.length > 1 && (
+                                <div style={{ marginTop: '6px', paddingTop: '10px', borderTop: '1px solid #e5e7eb', fontWeight: 600, fontSize: '14px', color: '#111827' }}>
+                                  Итого: {a.services.reduce((acc: number, curr: any) => acc + (curr.price || 0), 0).toLocaleString('ru-RU')} ₽
+                                </div>
+                              )}
                             </div>
                           ) : (
                             <div style={{ fontWeight: 500 }}>-</div>
                           )}
                         </td>
-                        <td style={{ padding: '16px' }}>
+                        <td style={{ padding: '16px', borderRight: '1px solid #e5e7eb' }}>
                           <select 
                             value={a.status} 
                             onChange={(e) => updateStatus(a.id, e.target.value)}
